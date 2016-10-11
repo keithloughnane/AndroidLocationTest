@@ -128,3 +128,21 @@
 
 19.09	Did anouther quick test. Dates, getting data and distance calulcations
 	working. I'm going to commit now and do a little refactoring.
+
+20:13	I've cleaned up the code slightly, moved the server address and some on
+	screen messages out into the values files so they're not hard coded
+	and for better localiseation.
+
+	Put in a bit of boilerplat to catch null datetimes on the parking data
+	although it was working anyway, I figured thats why that null is in there.
+
+	I quickly added logging to a file in the server.
+
+	I have something I have to do this evening, can't be avoided. It's pretty much working.
+
+	Here's what I'd cleen up if I had time. Better writing to a log, particularly for errors
+	I think you wanted me to return data at the same time as logging it in one method,
+	I think there is too much code repeated in there.
+
+	There is an issue with the android app freesing when it connects for data, that needs to
+	be sorted out.
