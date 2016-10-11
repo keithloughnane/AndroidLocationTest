@@ -115,4 +115,6 @@
 14:00	Got it working on my own server. Turns out the router in my building is
 	blocking.
 
-
+14:22	Ok, Loading JSON from the server, parsing, showing pins, and now selecting pins.
+	I think all the main sticking points are working. It's all plumbing now.
+	Going for a break then I'll come back and finish it.

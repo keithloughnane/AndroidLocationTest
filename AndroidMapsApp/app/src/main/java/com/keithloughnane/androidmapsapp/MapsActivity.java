@@ -11,12 +11,15 @@ import android.os.StrictMode;
 
 
 
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,9 +45,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -146,8 +161,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(tallinn));
         mMap.setMinZoomPreference(10);
+
+
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                Log.d(TAG, "onMarkerClick: Clicked");
+                double aa = marker.getPosition().latitude;
+                double bb = marker.getPosition().longitude;
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                /*
+                if (prevMarker != null) {
+                    //Set prevMarker back to default color
+                    prevMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+
+                //leave Marker default color if re-click current Marker
+                if (!marker.equals(prevMarker)) {
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    prevMarker = marker;
+                }
+                prevMarker = marker;
+                */
+                return false;
+            }
+        });
+
+
+
+
     }
-
-
-
 }
