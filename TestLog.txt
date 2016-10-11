@@ -118,3 +118,7 @@
 14:22	Ok, Loading JSON from the server, parsing, showing pins, and now selecting pins.
 	I think all the main sticking points are working. It's all plumbing now.
 	Going for a break then I'll come back and finish it.
+
+14:49	Back. Working a bit on the UI.
+
+17:25	Ok it's getting distances too, from the server.

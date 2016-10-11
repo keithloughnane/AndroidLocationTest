@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">AndroidMapsApp</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="Title">Autlo</string>
+    <string name="editDate">01/01/2016</string>
+    <string name="editTime">12:00</string>
+    <string name="searchButton">Find Active Parking</string>
+    <string name="distance">Distance</string>
 </resources>

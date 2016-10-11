@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.*;
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -71,6 +72,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d(TAG,"onClick: btnGetForDates");
 
                 getLocations(1457604000);
+
+
             }
         });
     }
@@ -126,7 +129,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.d(TAG, "getLocations: Returning JSONArray " + jobj.getJSONObject(i).get("date_created"));
 
                         mMap.addMarker(new MarkerOptions().position(new LatLng(jobj.getJSONObject(i).getDouble("lat"),jobj.getJSONObject(i).getDouble("lng"))));
-
                     }
                 }
                 catch(Exception e)
@@ -162,7 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(tallinn));
         mMap.setMinZoomPreference(10);
 
-
+        final ArrayList<Marker> selectedMarkers = new ArrayList<>();
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
@@ -170,9 +172,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
 
                 Log.d(TAG, "onMarkerClick: Clicked");
-                double aa = marker.getPosition().latitude;
-                double bb = marker.getPosition().longitude;
-                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                //double aa = marker.getPosition().latitude;
+                //double bb = marker.getPosition().longitude;
+                if(selectedMarkers.contains(marker))
+                {
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    selectedMarkers.remove(marker);
+                }
+                else
+                {
+
+
+                    selectedMarkers.add(marker);
+
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                }
+
+                if(selectedMarkers.size() == 2)//if two selected show distance
+                {
+                    Log.d(TAG, "onMarkerClick: 2 Selected, getting distance");
+                    getDistance(selectedMarkers.get(0).getPosition(),selectedMarkers.get(1).getPosition());
+                    
+                    
+
                 /*
                 if (prevMarker != null) {
                     //Set prevMarker back to default color
@@ -186,6 +208,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 prevMarker = marker;
                 */
+                }
                 return false;
             }
         });
@@ -193,5 +216,108 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    }
+
+    public String getDistance(LatLng P1, LatLng P2)
+    {
+
+        JSONObject requestJSON = new JSONObject();
+        try {
+            JSONObject point1 = new JSONObject();
+            point1.put("lat", P1.latitude);
+            point1.put("lng", P1.longitude);
+            //Log.d(TAG, "getDistance: " + P1.latitude );
+            JSONObject point2 = new JSONObject();
+            point2.put("lat", P2.latitude);
+            point2.put("lng", P2.longitude);
+
+
+            requestJSON.put("point1", point1);
+            requestJSON.put("point2", point2);
+
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "getDistance E : " + e);
+        }
+
+        String jsonString = requestJSON.toString();
+        Log.d(TAG, "getDistance F : " + jsonString);
+
+
+
+
+          /*
+            {
+        "point1": {
+            "lat": 26.4325,
+            "lng": 51.3345
+        },
+        "point2": {
+            "lat": 26.4444,
+            "lng": 51.2633
+        }
+    }*/
+
+
+
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        String response = "";
+        String returnValue = "";
+
+        JSONObject jobj = new JSONObject();
+
+
+        String str = "http://192.168.43.239:3000/getDistance/coords" + jsonString;
+        try {
+            URL url = new URL(str);
+
+            URLConnection urlc = url.openConnection();
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+            String line;
+            //JsonParser parser = new JsonParser();
+
+            //JSONArray jsn = new JSONArray(line);
+            while((line = br.readLine())!=null)
+            {
+
+                response = response + line; //This can be more better
+
+            }
+            Log.d(TAG,response);
+
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "onClick Net: " + e.toString());
+            e.printStackTrace();
+        }
+
+        try {
+            jobj  = new JSONObject(response);
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, e.toString());
+        }
+        if(jobj != null) {
+
+            // Log.d(TAG, "getLocations: Returning JSONArray " + jobj.get(0));
+
+            try {
+                Log.d(TAG, "getDistance: Returning" + jobj.getString("distance"));
+                returnValue = jobj.getString("distance");
+
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return returnValue;
     }
 }
