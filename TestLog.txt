@@ -102,3 +102,10 @@
 	
 11:15	Basically I've spent the whole morning messing arround with an little
 	bit of network code, trying to solve a cryptic error.
+
+11:24	Arrgg! Turns out if it recieves a 200 error it throws a file not found
+	exception. I was just trying to get a connection so I wasn't worries about
+	having the arguments. I thought I'd receive {"error":"time must be unix timestamp"}
+	and be able to elaberate from there. I wasted a lot of time on a bad assumption.
+
+12:49	Back to making progress again. Connection, getting the JSON data and parsing it and placing pins on the map are working.
