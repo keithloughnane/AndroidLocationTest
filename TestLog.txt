@@ -1,0 +1,86 @@
+15:24   Starting
+	    Don’t know Node.JS at all so need to take some time to learn enough to start and to get set up.
+
+	    My first priority should be just getting requests answered, as I’m new to this I think if I can get that far I’ll be doing ok. After that I should make progress on the server quickly.
+
+16:14   poking around, just setting up the environment and watching tutorials. Found web storm that seemed to set the environment up for me. Perhaps set too much stuff up for me, emailed Mikk to see if that’s considered cheating.
+
+        The environment remains me a bit of ruby on rails.
+
+16:35   Mikk emailed back, doesn’t mind if I use it as long as I understand. I might take the time to explain the parts later to show I do understand.
+        At the moment I could just about pull this off with a single file using (rough pseudocode)
+
+        if (request = “/getDistance”)
+	        getDistance()
+        if(request = “/getActiveLocations”)
+	        getActiveLocations()
+
+        But it would force clients to wait, one of the advantages of Node.js is that your don’t have to do that and the routing wouldn’t be very good.
+
+17:08   Set up Repos. And committed this log.
+
+17:25   I'm still studying node.js but I set up the repos while watching vids.
+
+        I think I understand routes now.
+
+
+        wasted a bit of time by typing app.local.locations rather than app.localS.locations
+        wasted more time by not realising I had to restart the server.
+
+18:18   Back to study for a while.
+
+       Changed my mind. Decided to move require for data.json to activeLocations.
+       It now passes the whole array back. No processing yet, just trying to get it taking arguments
+       and passing json back.
+
+19:49   Was doing R&D on passing in and out data. Got passing in date working. Passing in JSON might be trickier.
+
+        Did a quick test. Passing in JSON in the URL works but feels wrong.
+        I don't have a good reason to not do it that way though.
+
+20:19   I've figured out the sticking points in Node.js. The routing, passing in an out arguments, working with data
+        etc is working I think I only need to connect the peices now.
+        I had no experience in Node.js or not much in Javascript before this but I did have experience in Java and Ruby
+        on Rails which helped a lot. Taking a break...
+
+21:41   Back to work.
+
+22:42   Spent way too long trying to fix a problem that didn't exist, I had the wrong test data in the url.
+        Anyway the distance calculation works. Needs to be cleaned up a bit and needs boiler plate to throw errors.
+        but it's working.
+
+23:11   Pasing and conveting to unix time works
+
+        Ad hoc test data
+        2016-08-10 12:00:00 should pass the first entry, throw and error on the second and fail the third one
+ aka    1470819600
+
+        2016-03-10 12:00:00 should fail 1st one, error on 2nd, pass 3rd.
+ aka    1457604000
+
+23:33  Getting a very wreird error where I'm getting debug log output for ONLY the time entries
+        with even number ID's. And only getting web browser output from entries with odd numbers.
+
+        It's like my if statement is being ignored and it's running older code.
+
+23:52  Figured it out. What happened was my test data didn't include miliseconds so it was failing on
+        every pass. But what was also happening was I was removing elements from the array so each time
+        I removed an element and the array got shorter by one and each elements index was reduced by one.
+        The result was all the odd numbered ID was removed and the Even numbers was left. Rookie mistake!
+
+        I'm going to add boiler plate now to fix this and come up with a way of fixing the array problem.
+
+        1457604000
+        1457604000000
+
+00:15   It's working now. Added some boilerplate, dropped the foreach loop for an old fassioned while loop.
+
+00:55   working on boiler plate. Maybe I should move onto the android bid and come back to finish it off but I
+        Like to focus on one thing.
+
+01:26   I added boilerplate to getDistance. The errors are probably too detailed and there is probably too much code
+        but looking at the example
+        "error": "point2 must be js object with lat and lng params"
+        I took this to mean it would show where specifically the error was and not just give a generic error.
+
+01:32   Taking a break. See Android project for the rest of this log.
