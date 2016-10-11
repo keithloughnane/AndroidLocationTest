@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         JSONArray jobj = new JSONArray();
 
 
-        String str = "http://assignment.autlo.com/coordinates?time=1457604000";
+        String str = "http://192.168.43.239:3000/activeLocations/date1457604000";
         try {
             URL url = new URL(str);
 
@@ -142,10 +142,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 */
 
         // Add a marker in Sydney and move the camera
-        LatLng tallinn = new LatLng(59.436962, 24.753574);
+        LatLng tallinn = new LatLng(58.38062,26.72509);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(tallinn));
-        mMap.setMinZoomPreference(14);
+        mMap.setMinZoomPreference(10);
     }
 
 

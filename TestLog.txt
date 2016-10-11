@@ -109,3 +109,10 @@
 	and be able to elaberate from there. I wasted a lot of time on a bad assumption.
 
 12:49	Back to making progress again. Connection, getting the JSON data and parsing it and placing pins on the map are working.
+
+13:16	Ok I realy want to connect to my own server, but it's not configured to allow outside connections.
+
+14:00	Got it working on my own server. Turns out the router in my building is
+	blocking.
+
+
