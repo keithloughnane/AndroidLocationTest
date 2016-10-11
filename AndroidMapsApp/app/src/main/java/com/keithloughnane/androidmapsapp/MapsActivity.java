@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import android.os.StrictMode;
 
 
 
@@ -15,6 +16,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +31,7 @@ import java.net.*;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private static final String TAG = "MAPS ACTIVITY";
+    private static final String TAG = "|>>";
 
 
 
@@ -50,57 +54,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 Log.d(TAG,"onClick: btnGetForDates");
 
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
 
 
-                HttpURLConnection connection;
-                BufferedReader reader;
 
+                String str = "http://assignment.autlo.com/coordinates?time=1457604000";
                 try {
-                    URL url = new URL("192.168.11.30:3000/getDistance/coords{\"point1\": {\"lat\": 26.4325,\"lng\": 51.3345},\"point2\": {\"lat\": 26.4444,\"lng\": 51.2633}}");
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.connect();
-
-                    InputStream stream = connection.getInputStream();
-
-                    reader = new BufferedReader(new InputStreamReader(stream));
-                    StringBuffer buffer = new StringBuffer();
-                    String line = "";
-                    while((line = reader.readLine()) != null)
+                    URL url = new URL(str);
+                    URLConnection urlc = url.openConnection();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+                    String line;
+                    while((line = br.readLine())!=null)
                     {
-                        buffer.append(line);
+                        JSONArray jsn = new JSONArray(line);
+                        for (int i=0; i < jsn.length();i++)
+                        {
+
+                            Log.d(TAG, "JSON is " + jsn.get(i).toString());
+
+                            JSONObject jo = (JSONObject)jsn.get(i);
+
+
+
+
+
+                        }
+
+
                     }
-
-
-
                 }
-                catch (MalformedURLException e)
+                catch (Exception e)
                 {
+                    Log.d(TAG, "onClick Net: " + e.toString());
                     e.printStackTrace();
                 }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-                finally {
-                    /*if(connection != null)
-                        connection.disconnect();
-                    try {
-                        if(reader != null)
-                        reader.close();
-                    }
-                    catch (IOException e)
-                    {
-
-                    }
-                    */
-
-                }
-
-
 
             }
         });
-
     }
 
 

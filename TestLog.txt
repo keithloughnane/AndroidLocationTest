@@ -84,3 +84,21 @@
         I took this to mean it would show where specifically the error was and not just give a generic error.
 
 01:32   Taking a break. See Android project for the rest of this log.
+
+
+----------------
+
+07:46	Next morning. Starting the Android app. Created the project.
+
+	tried a DatePicker and a TimePicker. They're very ugly.
+
+	I think what I'm going to do is just have text fields to start and 
+	if I have time I'll go back and make a view for selecting the datetime
+	(or a fragment, probably).
+
+	Actually, changed my mind. I'm not going to work on the UI or maps
+	for a while. I'm going to focus on making the connection to my server.
+
+	
+11:15	Basically I've spent the whole morning messing arround with an little
+	bit of network code, trying to solve a cryptic error.
