@@ -2,6 +2,12 @@ package com.keithloughnane.androidmapsapp;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.*;
+
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,9 +16,21 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.*;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private static final String TAG = "MAPS ACTIVITY";
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +40,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+
+        Button btnGetForDates = (Button) findViewById(R.id.btnGetForDates);
+
+        btnGetForDates.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"onClick: btnGetForDates");
+
+
+
+                HttpURLConnection connection;
+                BufferedReader reader;
+
+                try {
+                    URL url = new URL("192.168.11.30:3000/getDistance/coords{\"point1\": {\"lat\": 26.4325,\"lng\": 51.3345},\"point2\": {\"lat\": 26.4444,\"lng\": 51.2633}}");
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+
+                    InputStream stream = connection.getInputStream();
+
+                    reader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuffer buffer = new StringBuffer();
+                    String line = "";
+                    while((line = reader.readLine()) != null)
+                    {
+                        buffer.append(line);
+                    }
+
+
+
+                }
+                catch (MalformedURLException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                finally {
+                    /*if(connection != null)
+                        connection.disconnect();
+                    try {
+                        if(reader != null)
+                        reader.close();
+                    }
+                    catch (IOException e)
+                    {
+
+                    }
+                    */
+
+                }
+
+
+
+            }
+        });
+
     }
 
 
@@ -43,4 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+
+
 }
