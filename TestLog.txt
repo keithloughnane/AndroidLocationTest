@@ -122,3 +122,9 @@
 14:49	Back. Working a bit on the UI.
 
 17:25	Ok it's getting distances too, from the server.
+
+18:49	I'm nearly done but a fiddly bug with the date conversion won't go away.
+18:58	Time conversion working.
+
+19.09	Did anouther quick test. Dates, getting data and distance calulcations
+	working. I'm going to commit now and do a little refactoring.

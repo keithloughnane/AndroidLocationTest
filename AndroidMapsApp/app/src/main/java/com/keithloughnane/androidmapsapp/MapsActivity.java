@@ -1,12 +1,14 @@
 package com.keithloughnane.androidmapsapp;
 
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import android.os.StrictMode;
+import android.content.DialogInterface;
 
 
 
@@ -32,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -71,14 +74,87 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 Log.d(TAG,"onClick: btnGetForDates");
 
-                getLocations(1457604000);
+
+                EditText strDate = (EditText)findViewById(R.id.editDate);
+                EditText strTime = (EditText)findViewById(R.id.editTime);
+
+                getLocations(getDateTimeFromString(strDate.getText().toString(),strTime.getText().toString()));
+
+
+                //getLocations(1457604000);
 
 
             }
         });
     }
 
-    public JSONArray getLocations(int unixTime)
+    public long getDateTimeFromString(String date, String time)
+    {
+        //Takes messy human input, checks it and returns unix time.
+
+        Date ddate = new Date();
+        int returnTime = -1;
+        try {
+            ddate = new Date(date + " " + time);
+            Log.d(TAG, "getDateTimeFromString: date=" + date + ", ddate " + date.toString());
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "getDateTimeFromString: " + e.toString());
+
+            alert("Date/Time format not correct. Please use the form DD/MM/YY HH:mm");
+
+
+
+/*
+
+            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            dlgAlert.setMessage("Date/Time format not correct. Please use the form DD/MM/YY HH:mm");
+
+            dlgAlert.setCancelable(true);
+            dlgAlert.create().show();
+            dlgAlert.setPositiveButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+
+
+*/
+
+
+        }
+
+        Log.d(TAG, "getDateTimeFromString: ddate=" + ddate.getTime());
+        //returnTime = Math.round(ddate.getTime());
+        return ddate.getTime();
+
+    }
+
+
+    public void alert(String alertMsg)
+    {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        dlgAlert.setMessage(alertMsg);
+
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+        dlgAlert.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dismiss the dialog
+                    }
+                });
+    }
+
+
+
+
+
+
+
+    public JSONArray getLocations(long unixTime)
     {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -87,7 +163,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         JSONArray jobj = new JSONArray();
 
 
-        String str = "http://192.168.43.239:3000/activeLocations/date1457604000";
+        String str = "http://192.168.43.239:3000/activeLocations/date" + String.valueOf(unixTime);
+
+        Log.d(TAG, "getLocations URL: " + str);
         try {
             URL url = new URL(str);
 
@@ -191,9 +269,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(selectedMarkers.size() == 2)//if two selected show distance
                 {
                     Log.d(TAG, "onMarkerClick: 2 Selected, getting distance");
-                    getDistance(selectedMarkers.get(0).getPosition(),selectedMarkers.get(1).getPosition());
-                    
-                    
+                    String dist = getDistance(selectedMarkers.get(0).getPosition(),selectedMarkers.get(1).getPosition());
+
+                    alert("  " + dist);
+
+
+
 
                 /*
                 if (prevMarker != null) {
