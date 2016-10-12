@@ -5,6 +5,6 @@
     <string name="editDate">10/08/2016</string>
     <string name="editTime">12:00</string>
     <string name="searchButton">Find Active Parking</string>
-    <string name="distance">Distance</string>
+    <string name="distance">Distance(M) </string>
     <string name="dateErr">Date/Time format not correct. Please use the form DD/MM/YY HH:mm</string>
 </resources>

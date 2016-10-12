@@ -159,3 +159,29 @@ Wed 2016-01-12
 
 14:36	Getting locations is working with threads. Date seems to be in American
 	format. Might just be my phones locatalisation settings.
+
+15:12	Getting distance working too. Cleaning up node.js server a bit.
+
+15:32	Minor tweaks to server logging. Returns and lofs on one method. with date.
+
+15:35	Working on the overall feel of the app and google maps. On my phone the
+	map is semi-respnisve wich is consfusing and annoying.
+15:51	Tried to get working on my Tablet but I've been having trouble with my
+	tablet latly.
+15:52	If you rotate or refresh the app, you lose the markers. I'm going to fix that.
+	
+16:00	After trying to build for my tablet I'm getting
+	Error:The number of method references in a .dex file cannot exceed 64K.
+Learn how to resolve this issue at https://developer.android.com/tools/building/multidex.html
+	Did a quickly look around and this can be cause by gradel automatically
+	adding stuff to it's own files.
+
+	Did a clean and rebuild and it's working now on my phone.
+
+15:55	Ok. I'm calling it done. There is always more I could do, I could use 
+	different layouts for different screens. The maps are weirdly semi-resonsive,
+	which is confucing but I have other things I need to do I have to finish
+	eventually. It's been a lot of fun learning Node.JS and Android.
+17:08 	Changed my mind about the date format. This problem only exists on my phone
+	because it's set to US format. On other phones it should be ok, so I removed
+	the "fix" as it would only cause issues to other people.
