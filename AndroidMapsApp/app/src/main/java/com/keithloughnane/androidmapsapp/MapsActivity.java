@@ -1,5 +1,6 @@
 package com.keithloughnane.androidmapsapp;
 
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -31,6 +32,9 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Date;
+
+
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 {
@@ -82,13 +86,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return ddate.getTime();
     }
 
-    public JSONArray getLocations(long unixTime)
+    public void getLocations(long unixTime)
     {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        /* Ok, Yeah. The above isn't great. I should write this in a way that won't look up instead
-            of turning off wise warnings. I just wanted to get it working first.
-         */
+
+        String serverAdd = getResources().getString(R.string.serveraddress);
+        String str = serverAdd + "/activeLocations/date" + String.valueOf(unixTime);
+        new downloadLocationsInfo().execute(serverAdd,str, " ");
+        /*
+
         String response = "";
         JSONArray jobj = new JSONArray();
         String serverAdd = getResources().getString(R.string.serveraddress);
@@ -135,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
         return jobj;
+        */
     }
 
     @Override
@@ -151,6 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(gpsStartPoint));
         mMap.setMinZoomPreference(10);
+
 
         final ArrayList<Marker> selectedMarkers = new ArrayList<>();
 
@@ -268,5 +275,97 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //dismiss the dialog
             }
         });
+    }
+
+
+
+
+
+    private class downloadLocationsInfo extends AsyncTask <String , String, String >
+    {
+
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... params)
+        {
+
+
+            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            //StrictMode.setThreadPolicy(policy);
+        /* Ok, Yeah. The above isn't great. I should write this in a way that won't look up instead
+            of turning off wise warnings. I just wanted to get it working first.
+         */
+            String response = "";
+
+            String serverAdd = params[0];  //= getResources().getString(R.string.serveraddress);
+            String str = params[1]; //= serverAdd + "/activeLocations/date" + String.valueOf(unixTime);
+            Log.d(TAG, "getLocations URL: " + str);
+            try
+            {
+                URL url = new URL(str);
+                URLConnection urlc = url.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+                String line;
+                while ((line = br.readLine()) != null)
+                {
+                    response = response + line; //This can be more better
+                }
+                Log.d(TAG, response);
+            } catch (Exception e)
+            {
+                Log.d(TAG, "onClick Net: " + e.toString());
+                e.printStackTrace();
+            }
+
+
+
+            return response;
+
+
+
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+
+            JSONArray jobj = new JSONArray();
+            try
+            {
+                jobj = new JSONArray(response);
+            } catch (Exception e)
+            {
+                Log.d(TAG, e.toString());
+            }
+
+
+            //Update UI here, this runs on the Main UI thread of the Activity
+
+                if (jobj != null)
+                {
+                    try
+                    {
+
+                        for (int i = 0; i < jobj.length(); i++)
+                        {
+                            Log.d(TAG, "getLocations: Returning JSONArray " + jobj.getJSONObject(i).get("date_created"));
+
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(jobj.getJSONObject(i).getDouble("lat"), jobj.getJSONObject(i).getDouble("lng"))));
+                        }
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            
+        }
+
+
     }
 }

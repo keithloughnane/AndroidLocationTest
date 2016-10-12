@@ -151,3 +151,11 @@ Wed 2016-01-12
 13:31	Didn't do anything since 20:13 last night. Didn't have time. I have
 	a class tonight at 6:30 and I've already missed one so I'm deciding that that's is my deadline.
 
+13:55	I looked at how the do the parameters correctly and, It should be in this
+	address/param/data form but as soon as I at a / to the router.get I get
+	404's. It's working as is so I'm going to apply my time somewhere else
+	for now.
+	Working on the Android threading.
+
+14:36	Getting locations is working with threads. Date seems to be in American
+	format. Might just be my phones locatalisation settings.
