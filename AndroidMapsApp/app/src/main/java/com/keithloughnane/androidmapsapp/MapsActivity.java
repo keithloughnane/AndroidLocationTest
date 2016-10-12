@@ -183,16 +183,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (selectedMarkers.size() == 2)//if two selected show distance
                 {
                     Log.d(TAG, "onMarkerClick: 2 Selected, getting distance");
-                    String dist = getDistance(selectedMarkers.get(0).getPosition(), selectedMarkers.get(1).getPosition());
-                    alert("  " + dist);
+                    getDistance(selectedMarkers.get(0).getPosition(), selectedMarkers.get(1).getPosition());
+
                 }
                 return false;
             }
         });
     }
 
-    public String getDistance(LatLng P1, LatLng P2)
+    public void getDistance(LatLng P1, LatLng P2)
     {
+
+        JSONObject requestJSON = new JSONObject();
+        try
+        {
+            JSONObject point1 = new JSONObject();
+            point1.put("lat", P1.latitude);
+            point1.put("lng", P1.longitude);
+            //Log.d(TAG, "getDistance: " + P1.latitude );
+            JSONObject point2 = new JSONObject();
+            point2.put("lat", P2.latitude);
+            point2.put("lng", P2.longitude);
+            requestJSON.put("point1", point1);
+            requestJSON.put("point2", point2);
+        } catch (Exception e)
+        {
+            Log.d(TAG, "getDistance E : " + e);
+        }
+
+        String jsonString = requestJSON.toString();
+        new downloadDistanceInfo().execute(jsonString," ", " ");
+
+
+
+        /*
 
         JSONObject requestJSON = new JSONObject();
         try
@@ -259,6 +283,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
         return returnValue;
+        */
     }
 
     public void alert(String alertMsg)
@@ -279,6 +304,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    private class downloadDistanceInfo extends AsyncTask <String , String, String >
+    {
+
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... params)
+        {
+            String jsonString = params[0];
+
+
+            Log.d(TAG, "getDistance F : " + jsonString);
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            String response = "";
+            String returnValue = "";
+
+            JSONObject jobj = new JSONObject();
+            String serverAdd = getResources().getString(R.string.serveraddress);
+            String str = serverAdd + "/getDistance/coords" + jsonString;
+            try
+            {
+                URL url = new URL(str);
+
+                URLConnection urlc = url.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+                String line;
+                while ((line = br.readLine()) != null)
+                {
+                    response = response + line; //This can be more better
+                }
+                Log.d(TAG, response);
+            } catch (Exception e)
+            {
+                Log.d(TAG, "onClick Net: " + e.toString());
+                e.printStackTrace();
+            }
+            try
+            {
+                jobj = new JSONObject(response);
+            } catch (Exception e)
+            {
+                Log.d(TAG, e.toString());
+            }
+            if (jobj != null)
+            {
+
+                try
+                {
+                    Log.d(TAG, "getDistance: Returning" + jobj.getString("distance"));
+                    returnValue = jobj.getString("distance");
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return returnValue;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String response)
+        {
+            alert(getResources().getString(R.string.distance) + response);
+        }
+    }
 
 
     private class downloadLocationsInfo extends AsyncTask <String , String, String >
@@ -318,18 +415,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d(TAG, response);
             } catch (Exception e)
             {
-                Log.d(TAG, "onClick Net: " + e.toString());
+                Log.d(TAG, "downloadLocationsInfo Net: " + e.toString());
                 e.printStackTrace();
             }
 
-
-
             return response;
-
-
-
-
-
         }
 
         @Override
@@ -363,9 +453,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         e.printStackTrace();
                     }
                 }
-            
         }
-
-
     }
 }
